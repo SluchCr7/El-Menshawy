@@ -145,10 +145,6 @@ export default function AboutPage() {
             </ol>
           </div>
 
-          {/* ----------------------------- */}
-          {/*   RANDOM GALLERY INSERTED     */}
-          {/* ----------------------------- */}
-          <RandomGallery images={galleryImages} />
 
         </section>
 
@@ -229,7 +225,9 @@ export default function AboutPage() {
 
         </aside>
       </main>
-
+      {/*   RANDOM GALLERY INSERTED     */}
+      {/* ----------------------------- */}
+      <RandomGallery images={galleryImages} />
       {/* Footer */}
       <footer className="mt-12 py-8 border-t border-[#C8A64B]/6">
         <div className="max-w-6xl mx-auto px-6 text-center text-sm text-[#D9C7A3]">

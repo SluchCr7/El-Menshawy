@@ -26,7 +26,7 @@ export default function RandomGallery({ images }) {
   }, [])
 
   return (
-    <div className="relative w-full h-[90vh] overflow-hidden bg-black rounded-xl">
+    <div className="relative w-full h-[90vh] overflow-hidden rounded-xl">
       {images.map((src, i) => (
         <motion.div
           key={i}
