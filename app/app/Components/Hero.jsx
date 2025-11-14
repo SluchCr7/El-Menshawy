@@ -259,7 +259,7 @@ export default function BioSection() {
       />
 
       {/* 🌓 طبقة overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0B3D2E]/80 via-[#0B3D2E]/70 to-[#0B3D2E]/90 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0B3D2E]/80 via-[#0B3D2E]/70 to-[#0B3D2E]/90 backdrop-blur-[1px]" />
 
       {/* ✨ محتوى النص */}
       <motion.div

@@ -225,7 +225,7 @@ export default function AboutPage() {
 
         </aside>
       </main>
-      <div id="gallary" className='w-full'>
+      <div id="gallery" className='w-full'>
         <RandomGallery images={galleryImages} />
       </div>
       {/* Footer */}

@@ -9,9 +9,9 @@ import QuotesSlider from "./Components/Quotes";
 export default function Home() {
   return (
     <>
-      <HeroSection/>
-      <QuranPlayer/>
       <Hero />
+      <QuranPlayer/>
+      <HeroSection/>
       <VideosSection />
       <QuotesSlider/>
     </>

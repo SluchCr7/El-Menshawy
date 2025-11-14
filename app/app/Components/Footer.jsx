@@ -33,24 +33,17 @@ export default function Footer() {
           </h3>
           <ul className="space-y-2 text-[#F7F6F2] text-sm">
             <li><a href="#" className="hover:text-[#D9C7A3] transition">الصفحة الرئيسية</a></li>
-            <li><a href="#recitations" className="hover:text-[#D9C7A3] transition">التلاوات</a></li>
-            <li><a href="#categories" className="hover:text-[#D9C7A3] transition">التصنيفات</a></li>
-            <li><a href="#about" className="hover:text-[#D9C7A3] transition">عن الشيخ</a></li>
-            <li><a href="#contact" className="hover:text-[#D9C7A3] transition">تواصل معنا</a></li>
+            <li><a href="#" className="hover:text-[#D9C7A3] transition">التلاوات</a></li>
+            <li><a href="/About" className="hover:text-[#D9C7A3] transition">عن الشيخ</a></li>
+            <li><a href="/Videos" className="hover:text-[#D9C7A3] transition">تلاوات و لقائات</a></li>
           </ul>
         </div>
 
         {/* 3. Contact & Support */}
         <div>
           <h3 className="text-[#C8A64B] text-xl font-['Amiri'] font-bold mb-4">
-            تواصل معنا
+            وسائل التواصل
           </h3>
-          <ul className="space-y-2 text-[#F7F6F2] text-sm">
-            <li>البريد الإلكتروني: <a href="mailto:info@alshiekh.com" className="hover:text-[#D9C7A3] transition">info@alshiekh.com</a></li>
-            <li>الهاتف: <a href="tel:+20123456789" className="hover:text-[#D9C7A3] transition">+20 123 456 789</a></li>
-            <li>العنوان: القاهرة، مصر</li>
-          </ul>
-
           {/* Social Icons */}
           <div className="mt-4 flex gap-4">
             <a href="#" className="text-[#C8A64B] hover:text-[#D9C7A3] transition text-lg"><FaFacebookF /></a>
