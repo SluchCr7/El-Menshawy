@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <pattern id="mash" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M0 15 L15 0 L30 15 L15 30 Z" fill="none" stroke="#C8A64B" stroke-width="1" opacity="0.6"></path>
+    </pattern>
+  </defs>
+  <rect width="200" height="200" fill="url(#mash)"></rect>
+</svg>
