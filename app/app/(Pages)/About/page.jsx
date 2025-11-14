@@ -225,9 +225,9 @@ export default function AboutPage() {
 
         </aside>
       </main>
-      {/*   RANDOM GALLERY INSERTED     */}
-      {/* ----------------------------- */}
-      <RandomGallery images={galleryImages} />
+      <div id="gallary" className='w-full'>
+        <RandomGallery images={galleryImages} />
+      </div>
       {/* Footer */}
       <footer className="mt-12 py-8 border-t border-[#C8A64B]/6">
         <div className="max-w-6xl mx-auto px-6 text-center text-sm text-[#D9C7A3]">

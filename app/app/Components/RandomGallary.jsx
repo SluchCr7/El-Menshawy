@@ -26,16 +26,16 @@ export default function RandomGallery({ images }) {
   }, [])
 
   return (
-    <div className="relative w-full h-[90vh] overflow-hidden rounded-xl">
+    <div className="w-full h-[90vh] grid grid-cols-4 gap-5">
       {images.map((src, i) => (
         <motion.div
           key={i}
-          style={{
-            position: 'absolute',
-            top: `${positions[i]?.top}%`,
-            left: `${positions[i]?.left}%`,
-            transform: `rotate(${positions[i]?.rotate}deg) scale(${positions[i]?.scale})`
-          }}
+        //   style={{
+        //     position: 'absolute',
+        //     top: `${positions[i]?.top}%`,
+        //     left: `${positions[i]?.left}%`,
+        //     transform: `rotate(${positions[i]?.rotate}deg) scale(${positions[i]?.scale})`
+        //   }}
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: positions[i]?.scale }}
           transition={{ duration: 0.8, delay: i * 0.1 }}
