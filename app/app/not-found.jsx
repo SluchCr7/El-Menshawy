@@ -37,11 +37,6 @@ export default function NotFound() {
           <ArrowRightCircle size={24} />
         </Link>
       </div>
-
-      {/* Decorative Islamic Calligraphy SVG */}
-      <div className="absolute bottom-6 opacity-20 w-64">
-        <img src="/patterns/bismillah-gold.svg" alt="bismillah" />
-      </div>
     </div>
   );
 }
