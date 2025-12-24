@@ -3,25 +3,86 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FDFBF7;
+  --foreground: #062D24;
+  --accent: #D4AF37;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-cream text-primary selection:bg-accent selection:text-white;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-cream-dark;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-light rounded-full border-2 border-cream-dark hover:bg-accent transition-colors;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-primary/80 backdrop-blur-md border border-white/10;
+  }
+
+  .gold-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #D4AF37 100%);
+  }
+
+  .emerald-gradient {
+    background: linear-gradient(135deg, #062D24 0%, #0A3D32 100%);
+  }
+
+  .spiritual-shadow {
+    box-shadow: 0 10px 30px -10px rgba(6, 45, 36, 0.1);
+  }
+
+  .islamic-border {
+    position: relative;
+    border: 1px solid theme('colors.accent.DEFAULT / 30%');
+  }
+
+  .islamic-border::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 1px solid theme('colors.accent.DEFAULT / 10%');
+    pointer-events: none;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Animations */
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-1;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* Arabic Specific Scaling */
+[lang="ar"] {
+  line-height: 1.8;
+}
+
+.font-arabic {
+  font-family: var(--font-amiri), serif;
+}
+
+.font-reem {
+  font-family: var(--font-reem), serif;
 }

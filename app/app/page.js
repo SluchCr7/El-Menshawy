@@ -1,19 +1,33 @@
-import Image from "next/image";
 import Hero from "./Components/Hero";
 import QuranPlayer from "./Components/QuranPlayer";
 import QuranListenCTA from "./Components/QuranListenCTA";
-import HeroSection from "./Components/HeroMensh";
 import VideosSection from "./Components/VideosSection";
 import QuotesSlider from "./Components/Quotes";
 
 export default function Home() {
   return (
-    <>
+    <main className="min-h-screen">
+      {/* 1. Hero Section - The First Impression */}
       <Hero />
-      <QuranPlayer/>
-      <HeroSection/>
+
+      {/* 2. Audio Insight - Quick Listening Access */}
+      <section className="relative z-10 -mt-20 md:-mt-32 px-6">
+        <QuranPlayer />
+      </section>
+
+      {/* 3. CTA Section - Direct Navigation to Mushafs */}
+      <QuranListenCTA />
+
+      {/* 4. Visual Library - rare videos */}
       <VideosSection />
-      <QuotesSlider/>
-    </>
+
+      {/* 5. Legacy Quotes - Testimonials */}
+      <QuotesSlider />
+
+      {/* Decorative Ornaments between sections if needed */}
+      <div className="py-20 bg-cream flex justify-center">
+        <img src="/patterns/ornament-bottom.svg" className="w-64 opacity-20" alt="" />
+      </div>
+    </main>
   );
 }

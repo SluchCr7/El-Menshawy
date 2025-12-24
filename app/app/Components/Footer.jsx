@@ -1,87 +1,121 @@
+'use client'
 import React from "react";
-import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import Link from "next/link";
+import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram, FaArrowUp } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 export default function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <footer className="relative bg-[#0B3D2E] text-[#F7F6F2] pt-16 pb-10 overflow-hidden">
-      {/* Decorative Pattern */}
+    <footer className="relative bg-primary-dark text-cream pt-24 pb-12 overflow-hidden border-t border-accent/20">
+      {/* Decorative Pattern Overlay */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage: "url('/patterns/mashrabiya.svg')",
-          backgroundSize: "200px",
+          backgroundSize: "300px",
           backgroundRepeat: "repeat",
         }}
       ></div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10 grid md:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
 
-        {/* 1. About Section */}
-        <div>
-          <h3 className="text-[#C8A64B] text-xl font-['Amiri'] font-bold mb-4">
-            عن الشيخ
-          </h3>
-          <p className="text-[#F7F6F2] text-sm leading-relaxed">
-            الشيخ محمد صديق المنشاوي، صوت خاشع يأسر القلوب وتلاوات خالدة بصوت من أرقى أصوات العالم الإسلامي.
-          </p>
-        </div>
+          {/* Brand Section */}
+          <div className="space-y-6">
+            <h3 className="text-3xl font-reem font-bold text-accent">محمد صديق المنشاوي</h3>
+            <p className="text-sand/80 text-lg leading-relaxed font-arabic">
+              صوتٌ من الجنة، وتلاوةٌ تخشع لها القلوب. نهدف إلى الحفاظ على تراث الشيخ وتقديمه للأجيال القادمة بأفضل حلة.
+            </p>
+            <div className="flex gap-5">
+              {[FaFacebookF, FaTwitter, FaYoutube, FaInstagram].map((Icon, idx) => (
+                <a
+                  key={idx}
+                  href="#"
+                  className="w-10 h-10 rounded-full border border-accent/30 flex items-center justify-center text-accent hover:bg-accent hover:text-primary transition-all duration-300"
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
+          </div>
 
-        {/* 2. Quick Links */}
-        <div>
-          <h3 className="text-[#C8A64B] text-xl font-['Amiri'] font-bold mb-4">
-            روابط سريعة
-          </h3>
-          <ul className="space-y-2 text-[#F7F6F2] text-sm">
-            <li><a href="#" className="hover:text-[#D9C7A3] transition">الصفحة الرئيسية</a></li>
-            <li><a href="#" className="hover:text-[#D9C7A3] transition">التلاوات</a></li>
-            <li><a href="/About" className="hover:text-[#D9C7A3] transition">عن الشيخ</a></li>
-            <li><a href="/Videos" className="hover:text-[#D9C7A3] transition">تلاوات و لقائات</a></li>
-          </ul>
-        </div>
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-xl font-serif font-bold text-accent mb-8 border-b border-accent/20 pb-2 inline-block">روابط هامة</h4>
+            <ul className="space-y-4">
+              {['الرئيسية', 'المصحف المرتل', 'المصحف المجود', 'عن الشيخ', 'المكتبة المرئية'].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-sand/70 hover:text-accent transition-colors duration-300 flex items-center gap-2 group font-reem">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent/30 group-hover:bg-accent transition-colors" />
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* 3. Contact & Support */}
-        <div>
-          <h3 className="text-[#C8A64B] text-xl font-['Amiri'] font-bold mb-4">
-            وسائل التواصل
-          </h3>
-          {/* Social Icons */}
-          <div className="mt-4 flex gap-4">
-            <a href="#" className="text-[#C8A64B] hover:text-[#D9C7A3] transition text-lg"><FaFacebookF /></a>
-            <a href="#" className="text-[#C8A64B] hover:text-[#D9C7A3] transition text-lg"><FaTwitter /></a>
-            <a href="#" className="text-[#C8A64B] hover:text-[#D9C7A3] transition text-lg"><FaYoutube /></a>
-            <a href="#" className="text-[#C8A64B] hover:text-[#D9C7A3] transition text-lg"><FaInstagram /></a>
+          {/* Recitations */}
+          <div>
+            <h4 className="text-xl font-serif font-bold text-accent mb-8 border-b border-accent/20 pb-2 inline-block">تلاوات مختارة</h4>
+            <ul className="space-y-4">
+              {['سورة يوسف', 'سورة مريم', 'سورة الرحمن', 'سورة طه', 'سورة الحشر'].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-sand/70 hover:text-accent transition-colors duration-300 font-arabic text-lg">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Newsletter / Contact */}
+          <div>
+            <h4 className="text-xl font-serif font-bold text-accent mb-8 border-b border-accent/20 pb-2 inline-block">ابق على تواصل</h4>
+            <p className="text-sand/70 mb-6 font-arabic text-lg">اشترك في قائمتنا البريدية لتصلك أحدث التسجيلات النادرة لفضيلة الشيخ.</p>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="البريد الإلكتروني"
+                className="w-full bg-primary-light border border-accent/20 rounded-lg py-4 px-6 text-cream focus:outline-none focus:border-accent transition-colors font-sans"
+              />
+              <button className="absolute left-2 top-2 bottom-2 px-6 bg-accent text-primary font-bold rounded-md hover:bg-accent-light transition-all">
+                اشتراك
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* 4. Newsletter / Download */}
-        <div>
-          <h3 className="text-[#C8A64B] text-xl font-['Amiri'] font-bold mb-4">
-            إشترك أو حمل
-          </h3>
-          <p className="text-[#F7F6F2] text-sm mb-4">
-            اشترك لتصلك أحدث التلاوات أو حمل المصحف كاملاً بجودة عالية.
+        {/* Bottom Bar */}
+        <div className="pt-10 border-t border-accent/10 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-sand/50 text-sm font-sans tracking-wider uppercase">
+            &copy; {new Date().getFullYear()} Mohamed Siddiq El-Minshawi Heritage. All Rights Reserved.
           </p>
-          <form className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="email"
-              placeholder="بريدك الإلكتروني"
-              className="px-3 py-2 rounded-lg text-black w-full sm:w-auto flex-1"
-            />
-            <button className="px-5 py-2 rounded-lg bg-[#C8A64B] text-[#0B3D2E] font-semibold hover:bg-[#D9C7A3] transition">
-              اشترك
-            </button>
-          </form>
-          <a href="#" className="mt-4 inline-block text-[#D9C7A3] text-sm hover:text-[#C8A64B] transition">
-            تحميل المصحف الكامل
-          </a>
+
+          <button
+            onClick={scrollToTop}
+            className="group flex items-center gap-3 text-accent hover:text-accent-light transition-colors"
+          >
+            <span className="text-xs font-sans tracking-[0.2em] uppercase">Back to top</span>
+            <div className="w-10 h-10 rounded-full border border-accent/20 flex items-center justify-center group-hover:border-accent group-hover:-translate-y-1 transition-all">
+              <FaArrowUp size={14} />
+            </div>
+          </button>
         </div>
-
       </div>
 
-      {/* Footer Bottom */}
-      <div className="border-t border-[#4A7856]/30 mt-10 pt-6 text-center text-sm text-[#D9C7A3]">
-        &copy; {new Date().getFullYear()} جميع الحقوق محفوظة للشيخ محمد صديق المنشاوي
-      </div>
+      {/* Subtle Bottom Ornament */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-32 opacity-10 pointer-events-none"
+        style={{
+          backgroundImage: "url('/patterns/ornament-bottom.svg')",
+          backgroundPosition: 'bottom center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      ></div>
     </footer>
   );
 }

@@ -1,87 +1,119 @@
 'use client'
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import React, { useState } from 'react'
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Search, Heart, Music } from 'lucide-react';
 
 export default function Header() {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navItems = [
+    { label: 'الرئيسية', link: '/' },
+    { label: 'عن الشيخ', link: '/About' },
+    { label: 'المصحف المرتل', link: '/Murattal' },
+    { label: 'المصحف المجود', link: '/Mojawwad' },
+    { label: 'المكتبة المرئية', link: '/Videos' }
+  ];
 
   return (
-    <header className="w-full bg-[#0B3D2E] text-[#C8A64B] border-b border-[#C8A64B]/20 shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-6 md:px-10">
+    <header
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled
+          ? 'bg-primary/90 backdrop-blur-md py-3 shadow-2xl border-b border-accent/20'
+          : 'bg-transparent py-5'
+        }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between">
 
-        {/* Logo / Title */}
-        <div className="flex items-center gap-3 select-none">
-          <Link href={"/"} className="text-2xl md:text-3xl font-bold tracking-wide text-[#C8A64B]">
-            محمد صديق المنشاوي
-          </Link>
-        </div>
+        {/* Logo / Brand */}
+        <Link href="/" className="relative group">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex flex-col"
+          >
+            <span className={`text-2xl md:text-3xl font-reem font-bold leading-tight transition-colors duration-300 ${scrolled ? 'text-accent' : 'text-accent'
+              }`}>
+              محمد صديق المنشاوي
+            </span>
+            <span className="text-[10px] md:text-xs tracking-[0.2em] font-sans text-sand/80 uppercase">
+              The Timeless Legacy
+            </span>
+          </motion.div>
+          <div className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent transition-all duration-500 group-hover:w-full" />
+        </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-10 text-lg">
-          {[
-            { label: 'عن الشيخ', link: '/About' },
-            { label: 'المرتل', link: '/Murattal' },
-            { label: 'المجود', link: '/Mojawwad' },
-            { label: 'مقالات', link: '/Articles' },
-            { label: 'لقائات', link: '/Videos' }
-          ].map((item) => (
-            <a
-              key={item.label}
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {navItems.map((item, idx) => (
+            <Link
+              key={item.link}
               href={item.link}
-              className="relative group transition text-[#C8A64B] hover:text-white"
+              className={`relative group px-2 py-1 transition-colors duration-300 font-reem text-lg ${pathname === item.link ? 'text-accent' : scrolled ? 'text-cream/90 hover:text-accent' : 'text-cream hover:text-accent'
+                }`}
             >
-              {item.label}
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[#C8A64B] group-hover:w-full transition-all duration-300"></span>
-            </a>
+              <motion.span
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                {item.label}
+              </motion.span>
+              <span className={`absolute bottom-0 left-0 h-[2px] bg-accent transition-all duration-300 ${pathname === item.link ? 'w-full' : 'w-0 group-hover:w-full'
+                }`} />
+            </Link>
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-[#C8A64B] focus:outline-none"
-          aria-label="menu"
-          onClick={() => setOpen(!open)}
-        >
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        {/* Actions */}
+        <div className="flex items-center gap-4">
+          <Link href="/Search" className="p-2 rounded-full hover:bg-accent/10 transition-colors text-accent">
+            <Search size={22} />
+          </Link>
+          <button
+            className="lg:hidden p-2 text-accent"
+            onClick={() => setIsOpen(!isOpen)}
           >
-            {open ? (
-              <>
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </>
-            ) : (
-              <>
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </>
-            )}
-          </svg>
-        </button>
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={`md:hidden bg-[#0B3D2E] text-[#C8A64B] overflow-hidden transition-all duration-500 font-['Cairo'] ${
-          open ? 'max-h-[300px] py-4' : 'max-h-0'
-        }`}
-      >
-        <nav className="flex flex-col items-center gap-6 text-lg">
-          <a href="/About" className="hover:text-white transition" onClick={() => setOpen(false)}>عن الشيخ</a>
-          <a href="/Murattal" className="hover:text-white transition" onClick={() => setOpen(false)}>المرتل</a>
-          <a href="/Mojawwad" className="hover:text-white transition" onClick={() => setOpen(false)}>المجود</a>
-          <a href="/Articles" className="hover:text-white transition" onClick={() => setOpen(false)}>مقالات</a>
-          <a href="/Videos" className="hover:text-white transition" onClick={() => setOpen(false)}>لقائات</a>
-        </nav>
-      </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-primary/95 backdrop-blur-xl border-b border-accent/20 overflow-hidden"
+          >
+            <div className="flex flex-col items-center py-10 gap-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.link}
+                  href={item.link}
+                  onClick={() => setIsOpen(false)}
+                  className={`text-2xl font-reem transition-colors ${pathname === item.link ? 'text-accent' : 'text-cream/80 hover:text-accent'
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
