@@ -11,7 +11,7 @@ export default function Home() {
       <Hero />
 
       {/* 2. Audio Insight - Quick Listening Access */}
-      <section className="relative z-10 -mt-10 md:-mt-12 mb-10 px-6">
+      <section className="relative z-10 -mt-2 md:-mt-10 mb-10 px-6">
         <QuranPlayer />
       </section>
 
