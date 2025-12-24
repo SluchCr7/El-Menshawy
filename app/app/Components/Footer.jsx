@@ -10,7 +10,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative bg-primary-dark text-cream pt-24 pb-12 overflow-hidden border-t border-accent/20">
+    <footer className="w-full relative bg-primary-dark text-cream pt-24 pb-12 overflow-hidden border-t border-accent/20">
       {/* Decorative Pattern Overlay */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -21,7 +21,7 @@ export default function Footer() {
         }}
       ></div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
+      <div className="w-full mx-auto px-6 md:px-10 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
 
           {/* Brand Section */}
