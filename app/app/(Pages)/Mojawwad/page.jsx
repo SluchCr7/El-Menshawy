@@ -1,11 +1,34 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import { menshQuran } from '../../utils/Data';
 import SurahCard from '../../Components/SurahCard';
-import { Mic2, Star, Search, Filter } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Mic2, Star, Search, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const normalizeArabic = (text) => {
+  if (!text) return '';
+  return text
+    .replace(/[\u064B-\u065F]/g, "") // remove tashkeel (diacritics)
+    .replace(/[أإآا]/g, "ا")
+    .replace(/ة/g, "ه")
+    .replace(/ى/g, "ي");
+};
 
 const MojawwadQuranPage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredSurahs = menshQuran.filter(surah => {
+    const query = normalizeArabic(searchQuery.trim());
+    if (!query) return true;
+
+    // Check if query is a number
+    if (/^\d+$/.test(query)) {
+      return surah.id.toString() === query;
+    }
+
+    return normalizeArabic(surah.name).includes(query);
+  });
+
   return (
     <main className="min-h-screen bg-cream">
       {/* Page Header */}
@@ -52,29 +75,51 @@ const MojawwadQuranPage = () => {
               </div>
               <div className="text-right">
                 <p className="text-xs font-sans uppercase tracking-[0.2em] text-primary/40">Pure Heritage</p>
-                <p className="text-xl font-reem font-bold text-primary">{menshQuran.length} سورة مسجلة</p>
+                <p className="text-xl font-reem font-bold text-primary">
+                  {filteredSurahs.length === menshQuran.length
+                    ? `${menshQuran.length} سورة مسجلة`
+                    : `وجدنا ${filteredSurahs.length} سورة`}
+                </p>
               </div>
             </div>
 
             <div className="relative w-full md:w-96">
               <input
                 type="text"
-                placeholder="ابحث عن السورة..."
-                className="w-full bg-cream/50 border border-accent/20 rounded-2xl py-4 px-12 text-primary focus:outline-none focus:border-accent transition-colors font-reem"
+                placeholder="ابحث عن السورة باسمها أو رقمها..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-cream/50 border-2 border-accent/20 rounded-2xl py-4 px-12 text-primary focus:outline-none focus:border-accent transition-colors font-reem"
               />
               <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-accent" size={20} />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {menshQuran.map((surah) => (
-              <SurahCard
-                key={surah.id}
-                surah={surah}
-                reciterType="mojawwad"
-              />
-            ))}
-          </div>
+          <motion.div
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredSurahs.map((surah) => (
+                <SurahCard
+                  key={surah.id}
+                  surah={surah}
+                  reciterType="mojawwad"
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          {filteredSurahs.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-20 bg-white/40 backdrop-blur-md rounded-[2.5rem] border border-accent/10"
+            >
+              <Sparkles size={48} className="text-accent/60 mx-auto mb-4 animate-pulse" />
+              <p className="text-xl font-reem text-primary/60">عذرًا، لم نجد أي سورة تطابق بحثك.</p>
+            </motion.div>
+          )}
         </div>
       </section>
 

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { menshQuran, menshQuranMurattal } from "@/app/utils/Data";
-import { Play, Pause, Download, SkipForward, SkipBack, Headphones, Volume2, Share2, ArrowLeft } from "lucide-react";
+import { Play, Pause, Download, SkipForward, SkipBack, Headphones, Share2, ArrowLeft, Heart } from "lucide-react";
 import { useSearchParams, useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -22,9 +22,45 @@ const Page = ({ params }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const nextSurah = list.find((s) => s.id === surahId + 1);
   const prevSurah = list.find((s) => s.id === surahId - 1);
+
+  useEffect(() => {
+    if (!surah) return;
+    const favorites = JSON.parse(localStorage.getItem('mensh_favorites') || '[]');
+    const exists = favorites.some(fav => fav.id === surahId && fav.type === type);
+    setIsFavorite(exists);
+  }, [surahId, type, surah]);
+
+  const toggleFavorite = () => {
+    if (!surah) return;
+    const favorites = JSON.parse(localStorage.getItem('mensh_favorites') || '[]');
+    let updated;
+    if (isFavorite) {
+      updated = favorites.filter(fav => !(fav.id === surahId && fav.type === type));
+    } else {
+      updated = [...favorites, { id: surahId, name: surah.name, type: type }];
+    }
+    localStorage.setItem('mensh_favorites', JSON.stringify(updated));
+    setIsFavorite(!isFavorite);
+    window.dispatchEvent(new Event('mensh_favorites_updated'));
+  };
+
+  const handleShare = () => {
+    if (!surah) return;
+    if (navigator.share) {
+      navigator.share({
+        title: `تلاوة سورة ${surah.name} بصوت الشيخ محمد صديق المنشاوي`,
+        text: `استمع إلى تلاوة خاشعة لسورة ${surah.name} بصوت الشيخ محمد صديق المنشاوي (${type === 'murattal' ? 'مرتل' : 'مجود'}) بجودة عالية.`,
+        url: window.location.href,
+      }).catch(console.warn);
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("تم نسخ رابط السورة لمشاركتها!");
+    }
+  };
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -139,9 +175,27 @@ const Page = ({ params }) => {
               <span className="text-accent text-xs font-sans tracking-[0.4em] uppercase block mb-1">Now Reciting</span>
               <h1 className="text-3xl md:text-5xl font-reem font-bold text-white tracking-wide">سورة {surah.name}</h1>
             </div>
-            <button className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all">
-              <Share2 size={20} />
-            </button>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={toggleFavorite}
+                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${
+                  isFavorite
+                    ? 'bg-rose-500 border-transparent text-white'
+                    : 'bg-white/5 border-white/10 text-white hover:bg-rose-500 hover:text-white'
+                }`}
+                title={isFavorite ? "إزالة من المفضلة" : "إضافة للمفضلة"}
+              >
+                <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
+              </button>
+              <button
+                onClick={handleShare}
+                className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all"
+                title="مشاركة السورة"
+              >
+                <Share2 size={20} />
+              </button>
+            </div>
           </div>
 
           {/* Main Player Display */}

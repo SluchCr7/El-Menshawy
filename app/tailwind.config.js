@@ -52,6 +52,7 @@ module.exports = {
         serif: ['var(--font-playfair)', 'serif'],
         sans: ['var(--font-outfit)', 'sans-serif'],
         arabic: ['var(--font-amiri)', 'serif'],
+        amiri: ['var(--font-amiri)', 'serif'],
       },
       backgroundImage: {
         'islamic-pattern': "url('/patterns/islamic-pattern.svg')",
@@ -62,6 +63,7 @@ module.exports = {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'subtle-zoom': 'subtleZoom 20s infinite alternate',
+        'spin-slow': 'spin 20s linear infinite',
       },
       keyframes: {
         fadeIn: {

@@ -12,16 +12,16 @@ export default function QuranListenCTA() {
     {
       title: "المصحف المرتل",
       desc: "تلاوة هادئة خاشعة، مثالية للحفظ والمراجعة والاستماع اليومي.",
-      icon: <Music className="text-accent" size={32} />,
+      icon: <Music className="text-accent" size={36} />,
       link: '/Murattal',
-      bgColor: 'bg-primary/40'
+      bgColor: 'bg-primary-dark/80'
     },
     {
       title: "المصحف المجود",
       desc: "تلاوة تعليمية بأحكام التجويد، تبرز جماليات المقامات وكمال الأداء.",
-      icon: <BookOpen className="text-accent" size={32} />,
+      icon: <BookOpen className="text-accent" size={36} />,
       link: '/Mojawwad',
-      bgColor: 'bg-primary/60'
+      bgColor: 'bg-primary-dark/95'
     }
   ];
 
@@ -33,14 +33,14 @@ export default function QuranListenCTA() {
           src="/assets/quran3.jpeg"
           alt="Quran Background"
           fill
-          className="object-cover brightness-[0.2]"
+          className="object-cover brightness-[0.15]"
         />
-        <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-primary/20 backdrop-blur-[3px]" />
         <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-transparent to-primary-dark" />
       </div>
 
       {/* Decorative Islamic Pattern */}
-      <div className="absolute inset-0 opacity-[0.05] z-1"
+      <div className="absolute inset-0 opacity-[0.03] z-1"
         style={{ backgroundImage: "url('/patterns/mashrabiya.svg')", backgroundSize: '300px' }}
       />
 
@@ -50,15 +50,15 @@ export default function QuranListenCTA() {
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-block p-4 rounded-full bg-accent/10 border border-accent/20 mb-8"
+            className="inline-block p-4 rounded-full bg-accent/15 border border-accent/20 mb-8 text-accent shadow-[0_0_20px_rgba(212,175,55,0.15)]"
           >
-            <Headphones size={40} className="text-accent" />
+            <Headphones size={40} className="animate-pulse" />
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-reem font-bold text-white mb-8"
+            className="text-4xl md:text-6xl font-reem font-bold text-white mb-8 leading-tight"
           >
             ابدأ رحلتك مع كتاب الله
           </motion.h2>
@@ -73,25 +73,28 @@ export default function QuranListenCTA() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
           {cards.map((card, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, x: idx === 0 ? 50 : -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3 + (idx * 0.1) }}
-              whileHover={{ y: -10 }}
-              className={`relative group cursor-pointer rounded-[2.5rem] p-10 md:p-14 overflow-hidden border border-accent/20 shadow-2xl ${card.bgColor} backdrop-blur-xl transition-all duration-500`}
+              transition={{ delay: 0.3 + (idx * 0.1), duration: 0.8 }}
+              whileHover={{ y: -8 }}
+              className={`relative group cursor-pointer rounded-[3rem] p-10 md:p-14 overflow-hidden border border-accent/25 shadow-2xl ${card.bgColor} backdrop-blur-xl transition-all duration-500`}
               onClick={() => router.push(card.link)}
             >
+              {/* Internal decorative border */}
+              <div className="absolute inset-4 border border-accent/5 rounded-[2.3rem] pointer-events-none group-hover:border-accent/10 transition-colors" />
+
               {/* Pattern inside card */}
-              <div className="absolute top-0 right-0 w-48 h-48 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <div className="absolute top-0 right-0 w-48 h-48 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
                 <img src="/patterns/mandala-bg.svg" alt="" className="w-full h-full object-contain rotate-12" />
               </div>
 
               <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-right gap-6">
-                <div className="w-20 h-20 rounded-2xl bg-accent flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-transform">
+                <div className="w-20 h-20 rounded-[1.5rem] bg-accent/15 border border-accent/35 flex items-center justify-center shadow-2xl group-hover:rotate-6 group-hover:scale-105 transition-all duration-500">
                   {card.icon}
                 </div>
 
@@ -99,20 +102,21 @@ export default function QuranListenCTA() {
                   {card.title}
                 </h3>
 
-                <p className="text-cream/70 text-lg leading-relaxed font-arabic">
+                <p className="text-cream/80 text-lg leading-relaxed font-arabic">
                   {card.desc}
                 </p>
 
                 <div className="mt-4 flex items-center gap-3 text-accent font-bold font-reem">
                   <span className="text-xl">استمع الآن</span>
-                  <div className="w-10 h-10 rounded-full border border-accent/30 flex items-center justify-center group-hover:bg-accent group-hover:text-primary transition-all">
-                    <Play size={18} fill="currentColor" />
+                  <div className="w-10 h-10 rounded-full border border-accent/30 flex items-center justify-center group-hover:bg-accent group-hover:text-primary transition-all shadow-[0_0_15px_rgba(212,175,55,0.1)] group-hover:shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                    <Play size={18} fill="currentColor" className="translate-x-0.5" />
                   </div>
                 </div>
               </div>
 
               {/* Hover Glow */}
-              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-accent/10 blur-[80px] rounded-full group-hover:bg-accent/20 transition-all duration-700" />
+              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-accent/5 blur-[80px] rounded-full group-hover:bg-accent/15 transition-all duration-700" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent w-0 group-hover:w-full transition-all duration-700" />
             </motion.div>
           ))}
         </div>

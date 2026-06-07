@@ -23,13 +23,16 @@ export default function Header() {
     { label: 'عن الشيخ', link: '/About' },
     { label: 'المصحف المرتل', link: '/Murattal' },
     { label: 'المصحف المجود', link: '/Mojawwad' },
-    { label: 'المكتبة المرئية', link: '/Videos' }
+    { label: 'المكتبة المرئية', link: '/Videos' },
+    { label: 'المصحف الشريف', link: '/Mushaf' },
+    { label: 'المفضلة', link: '/Favorites' },
+    { label: 'اتصل بنا', link: '/Contact' }
   ];
 
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled
-          ? 'bg-primary/90 backdrop-blur-md py-3 shadow-2xl border-b border-accent/20'
+          ? 'bg-primary/95 backdrop-blur-md py-3 shadow-2xl border-b border-accent/20'
           : 'bg-transparent py-5'
         }`}
     >
@@ -42,11 +45,11 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
-            <span className={`text-2xl md:text-3xl font-reem font-bold leading-tight transition-colors duration-300 ${scrolled ? 'text-accent' : 'text-accent'
+            <span className={`text-xl md:text-2xl lg:text-3xl font-reem font-bold leading-tight transition-colors duration-300 ${scrolled ? 'text-accent' : 'text-accent'
               }`}>
               محمد صديق المنشاوي
             </span>
-            <span className="text-[10px] md:text-xs tracking-[0.2em] font-sans text-sand/80 uppercase">
+            <span className="text-[9px] md:text-xs tracking-[0.2em] font-sans text-sand/80 uppercase">
               The Timeless Legacy
             </span>
           </motion.div>
@@ -54,18 +57,18 @@ export default function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
           {navItems.map((item, idx) => (
             <Link
               key={item.link}
               href={item.link}
-              className={`relative group px-2 py-1 transition-colors duration-300 font-reem text-lg ${pathname === item.link ? 'text-accent' : scrolled ? 'text-cream/90 hover:text-accent' : 'text-cream hover:text-accent'
+              className={`relative group px-1 py-1 transition-colors duration-300 font-reem text-base xl:text-lg ${pathname === item.link ? 'text-accent' : scrolled ? 'text-cream/90 hover:text-accent' : 'text-cream hover:text-accent'
                 }`}
             >
               <motion.span
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
+                transition={{ delay: idx * 0.05 }}
               >
                 {item.label}
               </motion.span>
@@ -98,13 +101,13 @@ export default function Header() {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-primary/95 backdrop-blur-xl border-b border-accent/20 overflow-hidden"
           >
-            <div className="flex flex-col items-center py-10 gap-6">
+            <div className="flex flex-col items-center py-6 gap-4">
               {navItems.map((item) => (
                 <Link
                   key={item.link}
                   href={item.link}
                   onClick={() => setIsOpen(false)}
-                  className={`text-2xl font-reem transition-colors ${pathname === item.link ? 'text-accent' : 'text-cream/80 hover:text-accent'
+                  className={`text-xl font-reem transition-colors ${pathname === item.link ? 'text-accent' : 'text-cream/80 hover:text-accent'
                     }`}
                 >
                   {item.label}

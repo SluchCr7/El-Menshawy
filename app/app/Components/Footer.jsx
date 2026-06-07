@@ -47,11 +47,17 @@ export default function Footer() {
           <div>
             <h4 className="text-xl font-serif font-bold text-accent mb-8 border-b border-accent/20 pb-2 inline-block">روابط هامة</h4>
             <ul className="space-y-4">
-              {['الرئيسية', 'المصحف المرتل', 'المصحف المجود', 'عن الشيخ', 'المكتبة المرئية'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sand/70 hover:text-accent transition-colors duration-300 flex items-center gap-2 group font-reem">
+              {[
+                { name: 'الرئيسية', href: '/' },
+                { name: 'المصحف المرتل', href: '/Murattal' },
+                { name: 'المصحف المجود', href: '/Mojawwad' },
+                { name: 'عن الشيخ', href: '/About' },
+                { name: 'المكتبة المرئية', href: '/Videos' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-sand/70 hover:text-accent transition-colors duration-300 flex items-center gap-2 group font-reem">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent/30 group-hover:bg-accent transition-colors" />
-                    {item}
+                    {item.name}
                   </Link>
                 </li>
               ))}
@@ -62,10 +68,16 @@ export default function Footer() {
           <div>
             <h4 className="text-xl font-serif font-bold text-accent mb-8 border-b border-accent/20 pb-2 inline-block">تلاوات مختارة</h4>
             <ul className="space-y-4">
-              {['سورة يوسف', 'سورة مريم', 'سورة الرحمن', 'سورة طه', 'سورة الحشر'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sand/70 hover:text-accent transition-colors duration-300 font-arabic text-lg">
-                    {item}
+              {[
+                { name: 'سورة يوسف', href: '/Play/12?type=mojawwad' },
+                { name: 'سورة مريم', href: '/Play/19?type=mojawwad' },
+                { name: 'سورة الرحمن', href: '/Play/55?type=mojawwad' },
+                { name: 'سورة طه', href: '/Play/20?type=mojawwad' },
+                { name: 'سورة الحشر', href: '/Play/59?type=mojawwad' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-sand/70 hover:text-accent transition-colors duration-300 font-arabic text-lg block hover:translate-x-[-4px] transition-transform">
+                    {item.name}
                   </Link>
                 </li>
               ))}
