@@ -118,7 +118,7 @@ export default function QuranPlayer() {
   };
 
   return (
-    <div className="relative w-full max-w-lg mx-auto px-4">
+    <div className="relative w-full max-w-lg mx-auto pt-16 px-4">
       {/* Background soft glowing orb */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[2.5rem]">
         <div className="absolute top-1/4 -right-10 w-64 h-64 bg-accent/10 blur-[80px] rounded-full" />
