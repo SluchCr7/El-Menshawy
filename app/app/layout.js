@@ -1,6 +1,8 @@
 import LayoutComp from "./Components/LayoutComp";
 import "./globals.css";
 import { Amiri, Reem_Kufi, Playfair_Display, Outfit } from "next/font/google";
+import { AuthProvider } from "./utils/AuthContext";
+import { MessageProvider } from "./utils/MessageContext";
 
 const amiri = Amiri({
   weight: ["400", "700"],
@@ -41,9 +43,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${reem.variable} ${amiri.variable} ${playfair.variable} ${outfit.variable} font-sans antialiased bg-cream text-primary overflow-x-hidden`}
       >
-        <LayoutComp>
-          {children}
-        </LayoutComp>
+        <AuthProvider>
+          <MessageProvider>
+            <LayoutComp>
+              {children}
+            </LayoutComp>
+          </MessageProvider>
+        </AuthProvider>
       </body>
     </html>
   );

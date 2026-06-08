@@ -1,36 +1,42 @@
-'use client'
+'use client';
+
 import React, { useState } from 'react';
-import { Mail, Send, CheckCircle2, MessageSquare, Link, Info, User } from 'lucide-react';
+import { Mail, Send, CheckCircle2, MessageSquare, Link, Info, User, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useMessages } from '@/app/utils/MessageContext';
 
 export default function ContactPage() {
+  const { sendMessage, loading } = useMessages();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'recording',
-    fileLink: '',
+    link: '',
     message: ''
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setServerError(null);
 
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    // استدعاء دالة الإرسال من الـ Context
+    const result = await sendMessage(formData.name, formData.email, formData.message, formData.link);
+    
+    if (result.success) {
       setSubmitted(true);
       setFormData({
         name: '',
         email: '',
-        subject: 'recording',
-        fileLink: '',
+        link: '',
         message: ''
       });
-    }, 1500);
+    } else {
+      // عرض الخطأ القادم من السيرفر أو الـ Validation الخاص بـ Joi
+      setServerError(result.message);
+    }
   };
 
   const handleChange = (e) => {
@@ -68,7 +74,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2 }}
             className="text-sand/80 text-xl font-arabic max-w-2xl mx-auto leading-relaxed"
           >
-            شاركنا آرائك، أو أرسل لنا تسجيلات نادرة للشيخ المنشاوي لنقوم بضمها للموقع ونشرها.
+            شاركونا آرائكم واقتراحاتكم، أو أرسلوا لنا تسجيلات نادرة للشيخ المنشاوي لنقوم بضمها للموقع ونشرها.
           </motion.p>
         </div>
       </section>
@@ -135,8 +141,25 @@ export default function ContactPage() {
                     onSubmit={handleSubmit}
                     className="space-y-8 text-right font-arabic"
                   >
-                    <h3 className="text-2xl font-reem font-bold text-primary mb-2">أرسل رسالتك الآن</h3>
-                    <p className="text-primary/40 text-sm mb-8 leading-relaxed">يرجى ملء جميع الحقول المطلوبة وسنقوم بالرد عليك في أقرب وقت.</p>
+                    <div>
+                      <h3 className="text-2xl font-reem font-bold text-primary mb-2">أرسل رسالتك الآن</h3>
+                      <p className="text-primary/40 text-sm leading-relaxed">يرجى ملء الحقول التالية وسيقوم فريق العمل بالرد عليك في أقرب وقت.</p>
+                    </div>
+
+                    {/* Server Error Alert */}
+                    <AnimatePresence>
+                      {serverError && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-sm"
+                        >
+                          <AlertCircle size={18} className="shrink-0" />
+                          <span>{serverError}</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       {/* Name */}
@@ -177,62 +200,37 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    {/* Subject/Topic */}
+                    {/* File Link (Optional & Professional Integration) */}
                     <div className="space-y-3">
-                      <label htmlFor="subject" className="text-primary font-bold text-base block pr-1">الموضوع الرئيسي *</label>
-                      <select
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        className="w-full bg-cream/30 border border-accent/20 rounded-2xl py-4 px-6 text-primary focus:outline-none focus:border-accent focus:bg-white transition-all text-right pr-6 cursor-pointer appearance-none"
-                      >
-                        <option value="recording">تقديم تسجيل نادر للشيخ</option>
-                        <option value="suggestion">اقتراح لتطوير الموقع</option>
-                        <option value="inquiry">استفسار عام</option>
-                        <option value="other">أخرى</option>
-                      </select>
+                      <label htmlFor="link" className="text-primary font-bold text-base block pr-1">رابط ملف التلاوة النادرة <span className="text-primary/40 text-xs font-normal">(اختياري)</span></label>
+                      <div className="relative">
+                        <input
+                          type="url"
+                          id="link"
+                          name="link"
+                          value={formData.link}
+                          onChange={handleChange}
+                          placeholder="https://drive.google.com/..."
+                          className="w-full bg-cream/30 border border-accent/20 rounded-2xl py-4 px-6 text-primary focus:outline-none focus:border-accent focus:bg-white transition-all text-left font-sans"
+                          dir="ltr"
+                        />
+                        <Link size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-accent" />
+                      </div>
+                      <span className="text-xs text-primary/40 block pr-1">يرجى رفع الملف على Google Drive أو Dropbox ومشاركتنا الرابط المفتوح.</span>
                     </div>
-
-                    {/* Optional File Link */}
-                    {formData.subject === 'recording' && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="space-y-3"
-                      >
-                        <label htmlFor="fileLink" className="text-primary font-bold text-base block pr-1">رابط التسجيل الصوتي (Google Drive / Dropbox) *</label>
-                        <div className="relative">
-                          <input
-                            type="url"
-                            id="fileLink"
-                            name="fileLink"
-                            required={formData.subject === 'recording'}
-                            value={formData.fileLink}
-                            onChange={handleChange}
-                            placeholder="https://drive.google.com/..."
-                            className="w-full bg-cream/30 border border-accent/20 rounded-2xl py-4 px-6 text-primary focus:outline-none focus:border-accent focus:bg-white transition-all text-left font-sans"
-                            dir="ltr"
-                          />
-                          <Link size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-accent" />
-                        </div>
-                        <span className="text-xs text-primary/40 block pr-1">يرجى التأكد من تفعيل صلاحية العرض لأي شخص لديه الرابط.</span>
-                      </motion.div>
-                    )}
 
                     {/* Message */}
                     <div className="space-y-3">
-                      <label htmlFor="message" className="text-primary font-bold text-base block pr-1">نص الرسالة *</label>
+                      <label htmlFor="message" className="text-primary font-bold text-base block pr-1">نص الرسالة أو تفاصيل التسجيل *</label>
                       <textarea
                         id="message"
                         name="message"
                         required
-                        rows="6"
+                        rows="5"
                         value={formData.message}
                         onChange={handleChange}
-                        placeholder="اكتب تفاصيل رسالتك هنا..."
-                        className="w-full bg-cream/30 border border-accent/20 rounded-2xl py-4 px-6 text-primary focus:outline-none focus:border-accent focus:bg-white transition-all text-right resize-none"
+                        placeholder="اكتب رسالتك أو تفاصيل التلاوة والمسجد والتاريخ إن وجد (20 حرفاً على الأقل)..."
+                        className="w-full bg-cream/30 border border-accent/20 rounded-2xl py-4 px-6 text-primary focus:outline-none focus:border-accent focus:bg-white transition-all text-right resize-none leading-relaxed"
                       />
                     </div>
 
@@ -240,10 +238,10 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full flex items-center justify-center gap-3 py-5 bg-primary hover:bg-accent hover:text-primary disabled:bg-primary/50 text-white font-reem font-bold text-xl rounded-2xl shadow-lg transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-center gap-3 py-5 bg-primary hover:bg-accent hover:text-primary disabled:bg-primary/50 text-white font-reem font-bold text-xl rounded-2xl shadow-lg transition-colors cursor-pointer disabled:cursor-not-allowed"
                     >
                       {loading ? (
-                        <span>جاري الإرسال...</span>
+                        <span>جاري إرسال رسالتكم...</span>
                       ) : (
                         <>
                           <span>إرسال الرسالة</span>
@@ -259,14 +257,16 @@ export default function ContactPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="text-center py-12 space-y-6"
                   >
-                    <CheckCircle2 size={64} className="text-emerald-500 mx-auto animate-bounce" />
+                    <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto border border-emerald-100">
+                      <CheckCircle2 size={36} />
+                    </div>
                     <h3 className="text-3xl font-reem font-bold text-primary">تم إرسال رسالتك بنجاح!</h3>
                     <p className="text-primary/70 font-arabic text-lg max-w-md mx-auto leading-relaxed">
-                      نشكرك جزيل الشكر على تواصلك ومساهمتك الكريمة. سيقوم فريق العمل بمراجعة الرسالة والرد عليك في أقرب وقت ممكن.
+                      نشكرك جزيل الشكر على تواصلك ومساهمتك الكريمة في خدمة تراث الشيخ. سيقوم فريق العمل بمراجعة رسالتك والرد عليك في أقرب وقت ممكن.
                     </p>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="px-8 py-4 bg-accent text-primary font-bold font-reem text-lg rounded-2xl shadow-md hover:scale-105 transition-transform"
+                      className="px-8 py-4 bg-accent text-primary font-bold font-reem text-lg rounded-2xl shadow-md hover:scale-105 transition-transform cursor-pointer"
                     >
                       إرسال رسالة أخرى
                     </button>
