@@ -26,27 +26,26 @@ app.use(helmet({
 //     message: { success: false, message: "Too many requests, please try again later." }
 // });
 
-// Middleware - Enhanced CORS for professional connection
-const allowedOrigins = [
-    process.env.FRONT_URL,
-    'http://localhost:3000',
-    'http://localhost:3001',
-].filter(Boolean);
+// تنظيف رابط الفرونت إيند وإزالة أي شرطة مائلة (/) في الآخر لو وُجدت
+// تأكد إن الرابط مكتوب كدة بالظبط في الـ Environment Variables على Vercel:
+// FRONT_URL=https://el-menshawy.vercel.app
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1 && process.env.NODE_ENV !== 'development') {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
+    origin: "https://el-menshawy.vercel.app", // حطينا الدومين صراحة ومباشرة عشان المتصفح يقرأه صح بنسبة 100%
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    optionsSuccessStatus: 200
 }));
 
+// التريكة السحرية لـ Vercel: الرد المباشر على طلبات الـ OPTIONS قبل أي شيء
+app.options('*', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', frontUrl);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+    return res.status(200).json({});
+});
 
 // 4. Data Sanitization & Body Parsing
 app.use(express.json({ limit: '50mb' })); // Increased limit for large uploads
