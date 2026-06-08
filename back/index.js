@@ -55,7 +55,8 @@ app.use(cookieParser());
 
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    // res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.json({message : "Hello from the backend!"})
 });
 
 // ⬇️ هنا بنضيف الـ Routes الجديدة ⬇️
