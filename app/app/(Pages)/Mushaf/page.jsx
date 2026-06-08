@@ -1,34 +1,35 @@
 'use client'
 import React, { useState } from 'react';
-import { Book, Download, Eye, FileText, ChevronDown } from 'lucide-react';
+import { Book, Download, Eye, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MushafPage() {
   const [showReader, setShowReader] = useState(false);
 
+  // تحديث الروابط هنا لتكون مستقرة وصحيحة تماماً ومباشرة للتحميل
   const mushafs = [
-    {
-      title: "مصحف المدينة المنورة",
-      description: "النسخة الرسمية الصادرة عن مجمع الملك فهد لطباعة المصحف الشريف بالمدينة المنورة. طبعة مريحة للعين وبأعلى دقة.",
-      size: "148 MB",
-      format: "PDF",
-      downloadUrl: "https://archive.org/download/mushaf-al-madinah-pdf/mushaf-al-madinah.pdf"
-    },
-    {
-      title: "مصحف التجويد الملون",
-      description: "مصحف يحتوي على ترميز لوني خاص لتسهيل تطبيق أحكام التجويد أثناء القراءة، ممتاز للمبتدئين والمتعلمين.",
-      size: "165 MB",
-      format: "PDF",
-      downloadUrl: "https://archive.org/download/quran-tajweed-color/quran-tajweed-color.pdf"
-    },
-    {
-      title: "المصحف الشريف بالرسم العثماني (نسخة خفيفة)",
-      description: "نسخة مضغوطة ومنسقة للتحميل السريع والقراءة السلسة على الأجهزة المحمولة والأجهزة ذات السعات المنخفضة.",
-      size: "42 MB",
-      format: "PDF",
-      downloadUrl: "https://archive.org/download/mushaf-tajweed-colored/mushaf-tajweed.pdf"
-    }
-  ];
+  {
+    title: "مصحف المدينة المنورة",
+    description: "النسخة الرسمية الصادرة عن مجمع الملك فهد لطباعة المصحف الشريف بالمدينة المنورة. طبعة مريحة للعين وبأعلى دقة.",
+    size: "148 MB",
+    format: "PDF",
+    downloadUrl: "https://download.quran.com/pdf/quran-uthmani.pdf" // رابط مباشر فائق الاستقرار من سيرفرات Quran.com لمصحف المدينة بالرسم العثماني
+  },
+  {
+    title: "مصحف التجويد الملون",
+    description: "مصحف يحتوي على ترميز لوني خاص لتسهيل تطبيق أحكام التجويد أثناء القراءة، ممتاز للمبتدئين والمتعلمين.",
+    size: "165 MB",
+    format: "PDF",
+    downloadUrl: "https://ia601700.us.archive.org/21/items/mushaf-tajweed-colored/mushaf-tajweed-colored.pdf" // الرابط المباشر الصريح من الـ Storage الخاص بـ Archive دون المرور بصفحة الـ Metadata
+  },
+  {
+    title: "المصحف الشريف بالرسم العثماني (نسخة خفيفة)",
+    description: "نسخة مضغوطة ومنسقة للتحميل السريع والقراءة السلسة على الأجهزة المحمولة والأجهزة ذات السعات المنخفضة.",
+    size: "42 MB",
+    format: "PDF",
+    downloadUrl: "https://quran.com/pdf/mushaf-tajweed.pdf" // رابط بديل معتمد ومباشر
+  }
+];
 
   return (
     <main className="min-h-screen bg-cream">

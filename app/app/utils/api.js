@@ -1,8 +1,12 @@
 import axios from 'axios';
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL 
+  ? `${process.env.NEXT_PUBLIC_API_URL}/api` 
+  : 'http://localhost:5001/api';
+
 const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api',
-  withCredentials: true, // Crucial to send and receive HTTP-only cookies
+  baseURL: apiUrl,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Play, Music, Mic2, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useAuth } from '../utils/AuthContext';
 
 const SurahCard = ({ surah, reciterType }) => {
   const isMurattal = reciterType === 'murattal';
   const label = isMurattal ? 'المصحف المرتل' : 'المصحف المجود';
 
   const [isFavorite, setIsFavorite] = useState(false);
-
+  const { user, logout, isAuthenticated } = useAuth();
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('mensh_favorites') || '[]');
     const exists = favorites.some(fav => fav.id === surah.id && fav.type === reciterType);
@@ -76,17 +77,21 @@ const SurahCard = ({ surah, reciterType }) => {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-3">
-            <button
-              onClick={toggleFavorite}
-              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 shadow-sm z-20 ${
-                isFavorite
-                  ? 'bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100'
-                  : 'bg-white border-accent/10 text-primary/30 hover:text-rose-500 hover:border-rose-200'
-              }`}
-              title={isFavorite ? "إزالة من المفضلة" : "إضافة للمفضلة"}
-            >
-              <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
-            </button>
+            {
+              isAuthenticated && (
+                <button
+                  onClick={toggleFavorite}
+                  className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 shadow-sm z-20 ${
+                    isFavorite
+                      ? 'bg-rose-50 border-rose-200 text-rose-500 hover:bg-rose-100'
+                      : 'bg-white border-accent/10 text-primary/30 hover:text-rose-500 hover:border-rose-200'
+                  }`}
+                  title={isFavorite ? "إزالة من المفضلة" : "إضافة للمفضلة"}
+                >
+                  <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
+                </button>
+              )
+            }
 
             <div className="w-12 h-12 rounded-full border border-accent/20 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:border-transparent transition-all duration-500 shadow-lg">
               <Play size={20} fill="currentColor" className="translate-x-0.5" />
