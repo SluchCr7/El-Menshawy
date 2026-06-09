@@ -34,14 +34,6 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-// التريكة السحرية لـ Vercel: الرد المباشر على طلبات الـ OPTIONS قبل أي شيء
-app.options('*', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', process.env.FRONT_URL);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
-    return res.status(200).json({});
-});
 
 // 4. Data Sanitization & Body Parsing
 app.use(express.json({ limit: '50mb' })); // Increased limit for large uploads
