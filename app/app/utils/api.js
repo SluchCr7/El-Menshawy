@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL 
-  ? `${process.env.NEXT_PUBLIC_API_URL}/api` 
-  : 'http://localhost:5001/api';
+const apiUrl = `https://mensh-server.vercel.app/api` || 'http://localhost:5001/api';
 
 const API = axios.create({
   baseURL: apiUrl,

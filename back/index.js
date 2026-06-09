@@ -27,7 +27,7 @@ app.use(helmet({
 // });
 
 app.use(cors({
-    origin: process.env.FRONT_URL, // حطينا الدومين صراحة ومباشرة عشان المتصفح يقرأه صح بنسبة 100%
+    origin: "https://el-menshawy.vercel.app", // حطينا الدومين صراحة ومباشرة عشان المتصفح يقرأه صح بنسبة 100%
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
