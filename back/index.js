@@ -10,14 +10,14 @@ const cookieParser = require("cookie-parser");
 connectDB()
 
 // Security middleware
-app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            imgSrc: ["'self'", "data:", "blob:", "res.cloudinary.com"]
-        }
-    }
-}));
+// app.use(helmet({
+//     contentSecurityPolicy: {
+//         directives: {
+//             defaultSrc: ["'self'"],
+//             imgSrc: ["'self'", "data:", "blob:", "res.cloudinary.com"]
+//         }
+//     }
+// }));
 
 // // Rate limiting
 // const limiter = rateLimit({
