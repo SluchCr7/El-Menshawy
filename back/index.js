@@ -26,12 +26,8 @@ app.use(helmet({
 //     message: { success: false, message: "Too many requests, please try again later." }
 // });
 
-// تنظيف رابط الفرونت إيند وإزالة أي شرطة مائلة (/) في الآخر لو وُجدت
-// تأكد إن الرابط مكتوب كدة بالظبط في الـ Environment Variables على Vercel:
-// FRONT_URL=https://el-menshawy.vercel.app
-
 app.use(cors({
-    origin: "https://el-menshawy.vercel.app", // حطينا الدومين صراحة ومباشرة عشان المتصفح يقرأه صح بنسبة 100%
+    origin: process.env.FRONT_URL, // حطينا الدومين صراحة ومباشرة عشان المتصفح يقرأه صح بنسبة 100%
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
@@ -40,7 +36,7 @@ app.use(cors({
 
 // التريكة السحرية لـ Vercel: الرد المباشر على طلبات الـ OPTIONS قبل أي شيء
 app.options('*', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', frontUrl);
+    res.setHeader('Access-Control-Allow-Origin', process.env.FRONT_URL);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
