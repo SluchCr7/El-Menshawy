@@ -3,6 +3,7 @@ import "./globals.css";
 import { Amiri, Reem_Kufi, Playfair_Display, Outfit } from "next/font/google";
 import { AuthProvider } from "./utils/AuthContext";
 import { MessageProvider } from "./utils/MessageContext";
+import { AudioProvider } from "./utils/AudioContext";
 
 const amiri = Amiri({
   weight: ["400", "700"],
@@ -45,9 +46,11 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <MessageProvider>
-            <LayoutComp>
-              {children}
-            </LayoutComp>
+            <AudioProvider>
+              <LayoutComp>
+                {children}
+              </LayoutComp>
+            </AudioProvider>
           </MessageProvider>
         </AuthProvider>
       </body>

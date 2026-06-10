@@ -3,6 +3,7 @@ import QuranPlayer from "./Components/QuranPlayer";
 import QuranListenCTA from "./Components/QuranListenCTA";
 import VideosSection from "./Components/VideosSection";
 import QuotesSlider from "./Components/Quotes";
+import DailyVerseCard from "./Components/DailyVerseCard";
 
 export default function Home() {
   return (
@@ -17,6 +18,9 @@ export default function Home() {
 
       {/* 3. CTA Section - Direct Navigation to Mushafs */}
       <QuranListenCTA />
+
+      {/* 3.5. Daily Quranic Verse Preview Card */}
+      <DailyVerseCard />
 
       {/* 4. Visual Library - rare videos */}
       <VideosSection />

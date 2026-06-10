@@ -2,12 +2,11 @@
 import React from "react"
 import { motion } from "framer-motion"
 
-export default function ProgressBar({ progress, duration, setProgress, audioRef, formatTime }) {
+export default function ProgressBar({ progress, duration, onSeek, formatTime }) {
   const handleSeek = (e) => {
     const newTime = Number(e.target.value)
-    setProgress(newTime)
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime
+    if (onSeek) {
+      onSeek(newTime)
     }
   }
 

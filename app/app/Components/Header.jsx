@@ -36,10 +36,9 @@ export default function Header() {
   const navItems = [
     { label: 'الرئيسية', link: '/' },
     { label: 'عن الشيخ', link: '/About' },
-    { label: 'المصحف المرتل', link: '/Murattal' },
-    { label: 'المصحف المجود', link: '/Mojawwad' },
     { label: 'المكتبة المرئية', link: '/Videos' },
     { label: 'المصحف الشريف', link: '/Mushaf' },
+    { label: 'الأذكار والورد', link: '/Dhikr' },
     { label: 'المفضلة', link: '/Favorites' },
     { label: 'اتصل بنا', link: '/Contact' }
   ];

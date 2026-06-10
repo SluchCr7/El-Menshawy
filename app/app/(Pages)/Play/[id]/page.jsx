@@ -1,11 +1,14 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { menshQuran, menshQuranMurattal } from "@/app/utils/Data";
 import { Play, Pause, Download, SkipForward, SkipBack, Headphones, Share2, ArrowLeft, Heart } from "lucide-react";
-import { useSearchParams, useParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useAudio } from "@/app/utils/AudioContext";
+import { useAuth } from "@/app/utils/AuthContext";
 
 const Page = ({ params }) => {
   const searchParams = useSearchParams();
@@ -18,15 +21,42 @@ const Page = ({ params }) => {
   const surahId = parseInt(id);
   const surah = list.find((s) => s.id === surahId);
 
-  const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const {
+    reciterType,
+    currentSurahId,
+    isPlaying,
+    progress,
+    duration,
+    playbackSpeed,
+    currentSurah,
+    playSurah,
+    togglePlay,
+    seekTo,
+    changeSpeed,
+  } = useAudio();
+
+  const { isAuthenticated } = useAuth();
   const [isFavorite, setIsFavorite] = useState(false);
 
   const nextSurah = list.find((s) => s.id === surahId + 1);
   const prevSurah = list.find((s) => s.id === surahId - 1);
 
+  // Load the selected Surah globally if it is not already active
+  useEffect(() => {
+    if (surah && (currentSurahId !== surahId || reciterType !== type)) {
+      // Load and autoplay when navigated directly
+      playSurah(surahId, type, true);
+    }
+  }, [surahId, type, surah, currentSurahId, reciterType]);
+
+  // Sync route URL if the global player advances (e.g. after track end)
+  useEffect(() => {
+    if (currentSurahId && currentSurahId !== surahId) {
+      router.push(`/Play/${currentSurahId}?type=${reciterType}`);
+    }
+  }, [currentSurahId, surahId, reciterType, router]);
+
+  // Synchronize Favorite status
   useEffect(() => {
     if (!surah) return;
     const favorites = JSON.parse(localStorage.getItem('mensh_favorites') || '[]');
@@ -62,58 +92,6 @@ const Page = ({ params }) => {
     }
   };
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.preload = "metadata";
-    audio.crossOrigin = "anonymous";
-
-    const handleLoadedMeta = () => {
-      setDuration(isFinite(audio.duration) ? audio.duration : 0);
-      setCurrentTime(audio.currentTime || 0);
-    };
-
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime || 0);
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
-    const handleEnded = () => {
-      setIsPlaying(false);
-      if (nextSurah) {
-        setTimeout(() => {
-          router.push(`/Play/${surahId + 1}?type=${type}`);
-        }, 400);
-      }
-    };
-
-    audio.addEventListener("loadedmetadata", handleLoadedMeta);
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("play", handlePlay);
-    audio.addEventListener("pause", handlePause);
-    audio.addEventListener("ended", handleEnded);
-
-    if (audio.readyState >= 1) handleLoadedMeta();
-
-    return () => {
-      audio.removeEventListener("loadedmetadata", handleLoadedMeta);
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("play", handlePlay);
-      audio.removeEventListener("pause", handlePause);
-      audio.removeEventListener("ended", handleEnded);
-    };
-  }, [surah?.url, surahId, type, nextSurah]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setDuration(0);
-  }, [id]);
-
   if (!surah) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-primary-dark text-white p-6">
@@ -131,23 +109,6 @@ const Page = ({ params }) => {
     const m = Math.floor(total / 60);
     const s = Math.floor(total % 60);
     return `${m}:${s < 10 ? "0" + s : s}`;
-  };
-
-  const togglePlay = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    try {
-      if (isPlaying) {
-        audio.pause();
-      } else {
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          await playPromise.catch(console.warn);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
   };
 
   return (
@@ -177,17 +138,21 @@ const Page = ({ params }) => {
             </div>
             
             <div className="flex gap-3">
-              <button
-                onClick={toggleFavorite}
-                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${
-                  isFavorite
-                    ? 'bg-rose-500 border-transparent text-white'
-                    : 'bg-white/5 border-white/10 text-white hover:bg-rose-500 hover:text-white'
-                }`}
-                title={isFavorite ? "إزالة من المفضلة" : "إضافة للمفضلة"}
-              >
-                <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
-              </button>
+              {
+                isAuthenticated && (
+                  <button
+                    onClick={toggleFavorite}
+                    className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${
+                      isFavorite
+                        ? 'bg-rose-500 border-transparent text-white'
+                        : 'bg-white/5 border-white/10 text-white hover:bg-rose-500 hover:text-white'
+                    }`}
+                    title={isFavorite ? "إزالة من المفضلة" : "إضافة للمفضلة"}
+                  >
+                    <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
+                  </button>
+                )
+              }
               <button
                 onClick={handleShare}
                 className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all"
@@ -248,7 +213,9 @@ const Page = ({ params }) => {
 
               <div className="text-center mb-12">
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <div className="px-3 py-1 bg-accent text-primary text-[10px] font-sans font-bold uppercase rounded-full tracking-widest">{type}</div>
+                  <div className="px-3 py-1 bg-accent text-primary text-[10px] font-sans font-bold uppercase rounded-full tracking-widest">
+                    {type === 'mojawwad' ? 'تجويد' : 'ترتيل'}
+                  </div>
                   <div className="w-1 h-1 rounded-full bg-white/20" />
                   <span className="text-sand/60 text-sm font-sans uppercase tracking-[0.2em]">Siddiq Al-Minshawi</span>
                 </div>
@@ -263,7 +230,7 @@ const Page = ({ params }) => {
                   <div className="relative h-2 bg-white/10 rounded-full group cursor-pointer">
                     <motion.div
                       className="h-full bg-accent rounded-full relative"
-                      style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+                      style={{ width: `${(progress / (duration || 1)) * 100}%` }}
                     >
                       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full border-4 border-accent shadow-xl scale-0 group-hover:scale-100 transition-transform" />
                     </motion.div>
@@ -272,17 +239,16 @@ const Page = ({ params }) => {
                       min="0"
                       max={duration || 0}
                       step="0.1"
-                      value={currentTime || 0}
+                      value={progress || 0}
                       onChange={(e) => {
                         const val = Number(e.target.value);
-                        audioRef.current.currentTime = val;
-                        setCurrentTime(val);
+                        seekTo(val);
                       }}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                   </div>
                   <div className="flex justify-between items-center mt-4 text-xs font-sans tracking-widest text-sand/40">
-                    <span>{formatTime(currentTime)}</span>
+                    <span>{formatTime(progress)}</span>
                     <span>{formatTime(duration)}</span>
                   </div>
                 </div>
@@ -293,6 +259,7 @@ const Page = ({ params }) => {
                     disabled={!prevSurah}
                     onClick={() => router.push(`/Play/${surahId - 1}?type=${type}`)}
                     className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all disabled:opacity-20"
+                    title="السورة السابقة"
                   >
                     <SkipForward size={24} />
                   </button>
@@ -300,6 +267,7 @@ const Page = ({ params }) => {
                   <button
                     onClick={togglePlay}
                     className="w-24 h-24 rounded-full bg-accent text-primary flex items-center justify-center shadow-[0_0_50px_rgba(212,175,55,0.3)] hover:scale-110 transition-transform active:scale-95"
+                    title={isPlaying ? "إيقاف مؤقت" : "تشغيل"}
                   >
                     {isPlaying ? <Pause size={36} fill="currentColor" /> : <Play size={36} fill="currentColor" className="translate-x-1" />}
                   </button>
@@ -308,26 +276,39 @@ const Page = ({ params }) => {
                     disabled={!nextSurah}
                     onClick={() => router.push(`/Play/${surahId + 1}?type=${type}`)}
                     className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all disabled:opacity-20"
+                    title="السورة التالية"
                   >
                     <SkipBack size={24} />
                   </button>
                 </div>
 
                 {/* Actions */}
-                <div className="flex justify-center gap-6">
+                <div className="flex justify-center items-center gap-6">
                   <a
                     href={surah.url}
-                    download
+                    download={`سورة_${surah.name}.mp3`}
                     className="flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-reem hover:bg-white/10 transition-all"
                   >
                     <Download size={18} /> تحميل السورة
                   </a>
+
+                  {/* Speed Controller */}
+                  <button
+                    onClick={() => {
+                      const speeds = [1.0, 1.25, 1.5, 2.0];
+                      const currentIndex = speeds.indexOf(playbackSpeed);
+                      const nextIndex = (currentIndex + 1) % speeds.length;
+                      changeSpeed(speeds[nextIndex]);
+                    }}
+                    className="flex items-center justify-center px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-[#d4af37] font-sans font-bold hover:bg-white/10 transition-all"
+                    title="سرعة التشغيل"
+                  >
+                    {playbackSpeed}x السرعة
+                  </button>
                 </div>
               </div>
             </div>
           </motion.div>
-
-          <audio ref={audioRef} src={surah.url} className="hidden" />
         </div>
       </div>
     </main>

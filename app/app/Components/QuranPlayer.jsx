@@ -1,26 +1,39 @@
 'use client'
+
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { menshQuran, menshQuranMurattal } from '@/app/utils/Data'
 import ProgressBar from '@/app/Components/Quran/ProgressBar'
 import { Play, Pause, SkipBack, SkipForward, Heart, Share2, Download, Headphones, Mic2, ChevronDown, Check } from 'lucide-react'
 import Image from 'next/image'
 import { useAuth } from '../utils/AuthContext'
+import { useAudio } from '../utils/AudioContext'
 
 export default function QuranPlayer() {
-  const [reciterType, setReciterType] = useState('mojawwad') // 'mojawwad' or 'murattal'
-  const [surahId, setSurahId] = useState(1)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const {
+    reciterType,
+    currentSurahId,
+    isPlaying,
+    progress,
+    duration,
+    playbackSpeed,
+    currentSurah,
+    playbackList,
+    playSurah,
+    togglePlay,
+    nextSurah,
+    prevSurah,
+    seekTo,
+    changeSpeed,
+  } = useAudio();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
   const { isAuthenticated } = useAuth();
-  const audioRef = useRef(null)
   const dropdownRef = useRef(null)
 
-  const surahs = reciterType === 'mojawwad' ? menshQuran : menshQuranMurattal
-  const surah = surahs.find((s) => s.id === surahId) || surahs[0]
+  const surahId = currentSurahId || 1;
+  const surahs = playbackList;
+  const surah = currentSurah || playbackList[0];
 
   // إغلاق القائمة المنسدلة عند الضغط خارجها
   useEffect(() => {
@@ -73,54 +86,6 @@ export default function QuranPlayer() {
     }
   };
 
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio || !surah) return
-    audio.src = surah.url
-    audio.load()
-    if (isPlaying) {
-      audio.play().catch(console.warn)
-    }
-  }, [surahId, reciterType])
-
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
-    const update = () => setProgress(audio.currentTime)
-    const loaded = () => setDuration(audio.duration || 0)
-    const ended = () => {
-      setIsPlaying(false)
-      if (surahId < surahs.length) {
-        setSurahId(surahId + 1)
-      } else {
-        setSurahId(1)
-      }
-    }
-
-    audio.addEventListener('timeupdate', update)
-    audio.addEventListener('loadedmetadata', loaded)
-    audio.addEventListener('ended', ended)
-    return () => {
-      audio.removeEventListener('timeupdate', update)
-      audio.removeEventListener('loadedmetadata', loaded)
-      audio.removeEventListener('ended', ended)
-    }
-  }, [surahId, reciterType, surahs.length])
-
-  const togglePlay = () => {
-    const audio = audioRef.current
-    if (!audio) return
-    if (isPlaying) {
-      audio.pause()
-      setIsPlaying(false)
-    } else {
-      audio.play().then(() => setIsPlaying(true)).catch(console.warn)
-    }
-  }
-
-  const nextSurah = () => surahId < surahs.length && setSurahId(surahId + 1)
-  const prevSurah = () => surahId > 1 && setSurahId(surahId - 1)
-
   const formatTime = (s) => {
     if (!s) return '00:00'
     const m = Math.floor(s / 60)
@@ -129,7 +94,6 @@ export default function QuranPlayer() {
   };
 
   return (
-    // هنا قمنا بتحويل الخلفية بالكامل إلى داكنة مريحة للعين ومبهرة بصرياً تدمج المشغل بالموقع
     <div className="relative w-full min-h-screen bg-[#020f0c] text-white flex items-center py-9 justify-center transition-colors duration-500">
       
       {/* توهج خلفي ناعم ضخم ممتد خارج الكارد يعطي طابع سينمائي */}
@@ -154,7 +118,7 @@ export default function QuranPlayer() {
 
           <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner font-reem">
             <button
-              onClick={() => { setReciterType('mojawwad'); setSurahId(1); setIsPlaying(false); }}
+              onClick={() => { playSurah(1, 'mojawwad', isPlaying); }}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
                 reciterType === 'mojawwad' ? 'bg-[#d4af37] text-[#05231c] shadow-md' : 'text-stone-400 hover:text-white'
               }`}
@@ -162,7 +126,7 @@ export default function QuranPlayer() {
               مجوّد
             </button>
             <button
-              onClick={() => { setReciterType('murattal'); setSurahId(1); setIsPlaying(false); }}
+              onClick={() => { playSurah(1, 'murattal', isPlaying); }}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
                 reciterType === 'murattal' ? 'bg-[#d4af37] text-[#05231c] shadow-md' : 'text-stone-400 hover:text-white'
               }`}
@@ -223,7 +187,7 @@ export default function QuranPlayer() {
             className="w-full bg-black/40 border border-white/10 rounded-xl p-3.5 text-white font-reem text-base flex items-center justify-between shadow-inner focus:border-[#d4af37]/40 transition-colors"
             dir="rtl"
           >
-            <span className="text-[#d4af37]">{surahId}. {surah.name}</span>
+            <span className="text-[#d4af37]">{surahId}. {surah?.name}</span>
             <ChevronDown size={18} className={`text-stone-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
@@ -240,7 +204,7 @@ export default function QuranPlayer() {
                   <button
                     key={s.id}
                     onClick={() => {
-                      setSurahId(s.id);
+                      playSurah(s.id, reciterType, isPlaying);
                       setIsDropdownOpen(false);
                     }}
                     className={`w-full text-right px-4 py-2.5 text-sm font-reem transition-colors flex items-center justify-between ${
@@ -261,8 +225,7 @@ export default function QuranPlayer() {
           <ProgressBar
             progress={progress}
             duration={duration}
-            setProgress={setProgress}
-            audioRef={audioRef}
+            onSeek={seekTo}
             formatTime={formatTime}
           />
         </div>
@@ -294,13 +257,27 @@ export default function QuranPlayer() {
               <Share2 size={16} />
             </button>
             <a
-              href={surah.url}
-              download={`سورة_${surah.name}.mp3`}
+              href={surah?.url}
+              download={`سورة_${surah?.name}.mp3`}
               className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-stone-400 hover:text-[#d4af37] hover:border-[#d4af37]/30 flex items-center justify-center transition-all"
               title="تحميل السورة"
             >
               <Download size={16} />
             </a>
+            
+            {/* Speed Selector Toggle */}
+            <button
+              onClick={() => {
+                const speeds = [1.0, 1.25, 1.5, 2.0];
+                const currentIndex = speeds.indexOf(playbackSpeed);
+                const nextIndex = (currentIndex + 1) % speeds.length;
+                changeSpeed(speeds[nextIndex]);
+              }}
+              className="w-12 h-10 rounded-xl bg-white/5 border border-white/10 text-[#d4af37] border-[#d4af37]/20 hover:text-white hover:border-white/20 flex items-center justify-center transition-all font-sans text-xs font-bold"
+              title="سرعة التشغيل"
+            >
+              {playbackSpeed}x
+            </button>
           </div>
 
           {/* أزرار التحكم في الصوت */}
@@ -334,7 +311,6 @@ export default function QuranPlayer() {
         </div>
 
       </motion.div>
-      <audio ref={audioRef} className="hidden" preload="auto" />
     </div>
   )
 }

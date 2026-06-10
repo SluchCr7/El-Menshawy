@@ -334,16 +334,43 @@ export const videos = [
   {
     "title": "لقاء نادر جدا مع الشيخ محمد صديق المنشاوى قبيل وفاته بعامين | جودة عالية HD",
     "youtubeUrl": "https://youtu.be/9UolmRufK4E?si=8EQbf4fyCqxtN6D9",
-    "thumbnail": "https://i.ytimg.com/vi/9UolmRufK4E/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLA5mu9j7VQMZbg9fskE9boVlx---w",
+    "thumbnail": "https://i.ytimg.com/vi/9UolmRufK4E/hq720.jpg",
+    "duration": "14:15",
+    "category": "documentary"
   },
   {
     "title": "مقابلة نادرة ١٩٦٧م مع فضيلة الشيخ محمد صديق المنشاوي رحمه الله",
     "youtubeUrl": "https://youtu.be/heEgiDnMEzI?si=lTMnNksp4MaaR6nP",
-    "thumbnail": "https://i.ytimg.com/vi/heEgiDnMEzI/hq720.jpg?sqp=-oaymwFBCNAFEJQDSFryq4qpAzMIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB8AEB-AH-CYAC0AWKAgwIABABGFIgTShlMA8=&rs=AOn4CLD_0vJyGH1ctfJYkGWnvMt0fdq41A",
+    "thumbnail": "https://i.ytimg.com/vi/heEgiDnMEzI/hq720.jpg",
+    "duration": "08:32",
+    "category": "documentary"
   },
   {
     "title": "من ذروة روائعه الخالدة | تلاوة أسطورية لسورة آل عمران تهز الوجدان | الشيخ المنشاوي 🎧",
     "youtubeUrl": "https://youtu.be/Dy84Tfn6gQ4?si=CxYxidgXWuQJP7Kr",
-    "thumbnail": "https://i.ytimg.com/vi/Dy84Tfn6gQ4/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLBehSir9tkuxI6foGJh1RXYdSLU4A",
+    "thumbnail": "https://i.ytimg.com/vi/Dy84Tfn6gQ4/hq720.jpg",
+    "duration": "48:20",
+    "category": "rare"
   },
-]
+  {
+    "title": "سورة الحشر والطارق والضحى والشرح - تلاوة تاريخية أسطورية من مسجد السيدة زينب عام 1960",
+    "youtubeUrl": "https://www.youtube.com/watch?v=F0k9yD4eK0E",
+    "thumbnail": "https://i.ytimg.com/vi/F0k9yD4eK0E/hq720.jpg",
+    "duration": "59:45",
+    "category": "mosque"
+  },
+  {
+    "title": "تلاوة تفوق الوصف لسورتي يوسف والرعد - تلاوة نادرة جدا للشيخ محمد صديق المنشاوي",
+    "youtubeUrl": "https://www.youtube.com/watch?v=vVj4Z6H6fL4",
+    "thumbnail": "https://i.ytimg.com/vi/vVj4Z6H6fL4/hq720.jpg",
+    "duration": "43:10",
+    "category": "rare"
+  },
+  {
+    "title": "الفيلم الوثائقي النادر: حياة الشيخ محمد صديق المنشاوي وصوت السماء الخالد",
+    "youtubeUrl": "https://www.youtube.com/watch?v=l_a1RypE30E",
+    "thumbnail": "https://i.ytimg.com/vi/l_a1RypE30E/hq720.jpg",
+    "duration": "24:50",
+    "category": "documentary"
+  }
+];

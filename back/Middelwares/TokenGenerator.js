@@ -19,7 +19,7 @@ const setTokenCookies = (res, accessToken, refreshToken) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax', // suitable for local dev cross-port communication
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   };
 
   // Set Access Token (15 mins)
@@ -40,7 +40,7 @@ const clearTokenCookies = (res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   };
 
   res.clearCookie('accessToken', cookieOptions);

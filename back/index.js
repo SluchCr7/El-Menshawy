@@ -1,13 +1,40 @@
 const express = require("express")
-const cors = require("cors")
 const helmet = require("helmet")
 require("dotenv").config()
 const app = express();
-const connectDB = require("./Config/db")
-const {errorHandler,notFound} = require("./Middelwares/errorHandler");
+const { errorHandler, notFound } = require("./Middelwares/errorHandler");
 const cookieParser = require("cookie-parser");
-// DB CONNECTION
-connectDB()
+
+// 1. Dynamic CORS Middleware (MUST run first, before DB connection or other routes)
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+        "https://el-menshawy.vercel.app", 
+        "http://localhost:3000", 
+        "http://localhost:3001"
+    ];
+    
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    } else {
+        // Default to production domain
+        res.setHeader("Access-Control-Allow-Origin", "https://el-menshawy.vercel.app");
+    }
+    
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin");
+    
+    // Immediately handle preflight OPTIONS requests without proceeding to DB or routers
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+    next();
+});
+
+// DB CONNECTION (Asynchronous, doesn't block preflight)
+const connectDB = require("./Config/db");
+connectDB();
 
 // Security middleware
 // app.use(helmet({
@@ -19,39 +46,29 @@ connectDB()
 //     }
 // }));
 
-// // Rate limiting
-// const limiter = rateLimit({
-//     windowMs: 15 * 60 * 1000, // 15 minutes
-//     max: 100, // limit each IP to 100 requests per windowMs
-//     message: { success: false, message: "Too many requests, please try again later." }
-// });
-
-app.use(cors({
-    origin: "https://el-menshawy.vercel.app", // حطينا الدومين صراحة ومباشرة عشان المتصفح يقرأه صح بنسبة 100%
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-    optionsSuccessStatus: 200
-}));
-
-
-// 4. Data Sanitization & Body Parsing
-app.use(express.json({ limit: '50mb' })); // Increased limit for large uploads
+// Data Sanitization & Body Parsing
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-
 app.get('/', (req, res) => {
-    // res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    res.json({message : "Hello from the backend!"})
+    res.json({ message: "Hello from the backend!" })
 });
 
-// ⬇️ هنا بنضيف الـ Routes الجديدة ⬇️
-app.use("/api/users", require("./Routes/userRoute")); // ملف الـ User
+// Routes
+app.use("/api/users", require("./Routes/userRoute"));
 app.use('/api/messages', require('./Routes/messageRoute'));
-// app.use(errorHandler)
-// app.use(notFound)
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`);
-});
+// Error handler middlewares (after routes)
+app.use(notFound);
+app.use(errorHandler);
+
+// Vercel serverless environment compatibility
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5001;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+module.exports = app;
